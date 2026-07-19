@@ -13,7 +13,7 @@ st.set_page_config(page_title="CodeMitra", page_icon="🚀", layout="centered")
 # ---------------------------------------------------------------------------
 # Header
 # ---------------------------------------------------------------------------
-st.title("🚀 CodeMitra")
+st.title("💻 CodeMitra")
 st.caption("Understand Python errors in your own language — English, Hindi, or Marathi.")
 
 # ---------------------------------------------------------------------------
