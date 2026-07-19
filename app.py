@@ -5,7 +5,8 @@ Run with: streamlit run app.py
 """
 
 import streamlit as st
-from knowledge_base import LANGUAGES, get_explanation
+from knowledge_base import LANGUAGES, get_explanation, ERROR_DATABASE
+from ai_layer import get_ai_explanation
 from runner import run_code
 
 st.set_page_config(page_title="CodeMitra", page_icon="💻", layout="centered")
@@ -27,7 +28,8 @@ with st.sidebar:
         "**Supported errors:**\n\n"
         "SyntaxError, NameError, TypeError, ValueError, IndexError, "
         "KeyError, ZeroDivisionError, IndentationError, AttributeError, "
-        "FileNotFoundError"
+        "FileNotFoundError\n\n"
+        "Any other error is explained live by AI."
     )
     st.markdown("---")
     st.markdown("Made with ❤️ for beginner programmers.")
@@ -41,6 +43,7 @@ SAMPLES = {
     "ZeroDivisionError example": "a = 10\nb = 0\nprint(a / b)",
     "IndexError example": "items = [1, 2, 3]\nprint(items[5])",
     "TypeError example": "print('5' + 5)",
+    "AssertionError example (AI-explained)": "assert 1 == 2, 'values do not match'",
 }
 
 sample_choice = st.selectbox("Or load an example:", list(SAMPLES.keys()))
@@ -73,7 +76,21 @@ if run_clicked:
             error_type = result["error_type"] or "UnknownError"
             st.error(f"❌ Error Detected: {error_type}")
 
-            explanation = get_explanation(error_type, language_key)
+            lang_code = LANGUAGES.get(language_key, "english")
+
+            if error_type in ERROR_DATABASE:
+                # Known error type -> use the local knowledge base
+                explanation = get_explanation(error_type, language_key)
+            else:
+                # Unknown error type -> ask the AI layer (Groq)
+                with st.spinner("Asking AI to explain this error..."):
+                    try:
+                        explanation = get_ai_explanation(
+                            code, error_type, result["error_message"] or "", lang_code
+                        )
+                    except Exception:
+                        # If the API call fails for any reason, fall back to the generic message
+                        explanation = get_explanation(error_type, language_key)
 
             st.subheader("📖 Explanation")
             st.markdown(f"**What happened?**\n\n{explanation['meaning']}")
