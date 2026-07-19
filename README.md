@@ -29,7 +29,7 @@ unexplained.
 
 ## 🎯 Try It
 
-🔗 **Live demo:** [[Paste your Streamlit link here](https://codemitra.streamlit.app/)]
+🔗 **Live demo:** [[codemitra.streamlit.app](https://codemitra.streamlit.app/)]
 
 Pick a sample error from the dropdown, or paste your own broken code, hit
 **Run Code**, and see the explanation.
