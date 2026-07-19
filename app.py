@@ -8,7 +8,7 @@ import streamlit as st
 from knowledge_base import LANGUAGES, get_explanation
 from runner import run_code
 
-st.set_page_config(page_title="CodeMitra", page_icon="🚀", layout="centered")
+st.set_page_config(page_title="CodeMitra", page_icon="💻", layout="centered")
 
 # ---------------------------------------------------------------------------
 # Header
