@@ -1,84 +1,125 @@
-# 🚀 CodeMitra
+# 💻 CodeMitra
 
-CodeMitra is a multilingual programming error explanation app that helps
-beginner programmers — especially learners more comfortable with Hindi or
-Marathi than English — understand Python errors in their own language.
+CodeMitra is a web app that helps beginner programmers understand Python
+errors in their own language — English, Hindi, or Marathi — instead of
+confusing technical error messages.
 
-Instead of just showing `NameError: name 'x' is not defined`, CodeMitra explains:
-- **What happened?**
-- **Why did it happen?**
-- **How do I fix it?**
+## 🤔 The Problem
 
-...in **English, Hindi, or Marathi**.
+When beginners write code and hit an error like:
+NameError: name 'x' is not defined
 
-## Features (v1)
+...it often makes no sense to someone new to programming. It's even harder
+if English isn't their first language.
 
-- Paste Python code and run it directly in the app
-- Automatic error detection (type + message)
-- Beginner-friendly explanations from a curated knowledge base
-- Supports 10 common beginner errors: `SyntaxError`, `NameError`, `TypeError`,
-  `ValueError`, `IndexError`, `KeyError`, `ZeroDivisionError`,
-  `IndentationError`, `AttributeError`, `FileNotFoundError`
-- Code runs in an isolated subprocess with a timeout, not in the app's own process
+## ✅ What CodeMitra Does
 
-## Project structure
+1. You paste your Python code into the app.
+2. CodeMitra runs it and detects the error (if any).
+3. It explains the error in plain language, in **three parts**:
+   - **What happened?**
+   - **Why did it happen?**
+   - **How do I fix it?**
+4. You choose the explanation language: **English, Hindi, or Marathi**.
 
-```
-codemitra/
-├── app.py              # Streamlit UI
-├── runner.py           # Safely executes user code in a subprocess
-├── knowledge_base.py   # Error explanations in English/Hindi/Marathi
-├── requirements.txt
-└── README.md
-```
+If the error is one of 10 common beginner errors, CodeMitra explains it
+instantly using its own built-in knowledge base. If it's a rarer error,
+CodeMitra asks an AI model to explain it on the spot — so no error goes
+unexplained.
 
-## Run locally
+## 🎯 Try It
+
+🔗 **Live demo:** [🔗 **Live demo:** [[Paste your Streamlit link here](https://codemitra.streamlit.app/)]]
+
+Pick a sample error from the dropdown, or paste your own broken code, hit
+**Run Code**, and see the explanation.
+
+## 🛠️ How It Works (Under the Hood)
+Your code
+↓
+Runs safely in an isolated process (so nothing crashes the app)
+↓
+Error caught?
+├── No  → shows your program's output
+└── Yes → looks up the error type
+├── Known error (one of 10 common types) → local knowledge base
+└── Unknown error → asks Groq's AI to explain it live
+↓
+Explanation shown in your chosen language
+
+## 📦 Project Files
+
+| File | What it does |
+|---|---|
+| `app.py` | The Streamlit web interface (what you see and click) |
+| `runner.py` | Safely runs your code in a separate process and catches errors |
+| `knowledge_base.py` | Beginner-friendly explanations for 10 common errors, in 3 languages |
+| `ai_layer.py` | Calls Groq's free AI API to explain any error not in the knowledge base |
+| `requirements.txt` | List of Python packages needed to run the app |
+
+## ✨ Supported Errors (built-in, instant)
+
+`SyntaxError`, `NameError`, `TypeError`, `ValueError`, `IndexError`,
+`KeyError`, `ZeroDivisionError`, `IndentationError`, `AttributeError`,
+`FileNotFoundError`
+
+Any other error → explained live by AI.
+
+## 🧰 Skills Used to Build This
+
+- **Python** — all the core logic
+- **Streamlit** — turns Python code into a web app with zero HTML/CSS/JS
+- **`subprocess`, `tempfile`, `os`** (Python's standard library) — run user
+  code safely in an isolated process instead of directly inside the app
+- **Regex (`re`)** — reads Python's error messages and pulls out the error
+  type and description
+- **Generative AI / LLMs** — Groq's free API explains errors the knowledge
+  base doesn't cover, in the user's chosen language (NLP + multilingual AI)
+- **Git & GitHub** — version control and code hosting
+- **Streamlit Community Cloud** — free public hosting, auto-deploys on every
+  GitHub push
+- **Localization** — hand-written Hindi and Marathi explanations for common
+  errors
+
+## 🚀 Run It Yourself
 
 ```bash
-git clone https://github.com/<your-username>/codemitra.git
-cd codemitra
-python3 -m venv venv
-source venv/bin/activate      # on Windows: venv\Scripts\activate
+git clone https://github.com/Pavithra29-eng/CodeMitra.git
+cd CodeMitra
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-streamlit run app.py
 ```
 
-Then open the local URL Streamlit prints (usually `http://localhost:8501`).
+Get a free API key from [console.groq.com](https://console.groq.com), then
+create a file `.streamlit/secrets.toml`:
 
-## Deploy for free (Streamlit Community Cloud)
+```toml
+GROQ_API_KEY = "your-key-here"
+```
 
-1. Push this project to a **public** GitHub repository (see below).
-2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
-3. Click **"New app"**, choose your repo, branch (`main`), and set the main
-   file path to `app.py`.
-4. Click **Deploy**. Your app will get a public URL like
-   `https://codemitra-<random>.streamlit.app`.
-
-## Push this project to GitHub
-
-From inside the `codemitra` folder:
+Run the app:
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit: CodeMitra MVP"
-git branch -M main
-git remote add origin https://github.com/<your-username>/codemitra.git
-git push -u origin main
+python -m streamlit run app.py
 ```
 
-(Create the empty repo first on github.com, without a README, so there's no
-merge conflict.)
+## 🌐 Deploy Your Own Copy (Free)
 
-## Roadmap
+1. Push this project to your own public GitHub repo.
+2. Go to [share.streamlit.io](https://share.streamlit.io) → sign in with GitHub.
+3. Click **New app** → pick your repo → branch `main` → main file `app.py`.
+4. Under **Settings → Secrets**, add your `GROQ_API_KEY`.
+5. Click **Deploy**. You'll get a public link in a couple of minutes.
 
-- [ ] AI/LLM layer (Ollama local model) for errors not in the knowledge base
-- [ ] Code explanation mode ("what does this loop do?")
-- [ ] Error history tracking per session
-- [ ] Voice explanations (text-to-speech in Hindi/Marathi)
-- [ ] Support for more languages
-- [ ] Support for more programming languages (C++, Java, JavaScript)
+## 🗺️ What's Next
 
-## License
+- [ ] Explain what a working code snippet does, not just errors
+- [ ] Track error history in a session
+- [ ] Read explanations aloud (text-to-speech) in Hindi/Marathi
+- [ ] Support more languages
+- [ ] Support more programming languages (C++, Java, JavaScript)
 
-MIT — feel free to use and extend.
+## 📄 License
+
+MIT — free to use, modify, and share.
